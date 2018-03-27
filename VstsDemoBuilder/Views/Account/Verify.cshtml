@@ -1,0 +1,144 @@
+﻿@model VstsDemoBuilder.Models.LoginModel
+@{
+    ViewBag.Title = "VSTS Demogenerator-Verify";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="~/assets/css/custom.min.css">
+    <title>Verify</title>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+    <section class="section-1 d-flex flex-column">
+        <main class="d-flex">
+            <div class="VSTS-hero-image d-none d-sm-flex flex-column">
+                <div class="VSTS-hero p-5">
+                    <img src="~/assets/images/VS_logo.png" alt="">
+                </div>
+                <div class="VSTS-hero-text bg-primary text-white p-5 ">
+                    <div class="display-4">
+                        Visual Studio Team Services Demo Generator
+                    </div>
+                    <a class="text-white mt-3 d-inline-block" href="mailto:devopsdemos@microsoft.com">devopsdemos@microsoft.com</a>
+                </div>
+            </div>
+            <div class="VSTS-details p-3 d-flex flex-column">
+                <img class="d-block mx-auto demo-generator-details-logo mt-2 mt-md-5" src="~/assets/images/VSTS_full_logo.png" alt="">
+                <h6 class="h6 text-primary mt-3 text-uppercase text-center">Visual Studio Team Services Demo Generator</h6>
+                <p class="text-center mt-2 mt-md-5">
+                    Visual Studio Team Services Demo Generator helps you create projects on your Visual Studio Team Services account with preset sample content which includes source code, work items, iterations, service endpoints, build and release definitions based on a template you choose.
+                </p>
+                <p class="text-center mb-0">
+                    The purpose of this system is to help follow hands-on-labs, demos and other education material provided by the Microsoft Visual Studio marketing team.
+                </p>
+                <div class="text-center mt-5">
+                    <button class="btn btn-primary" id="signInWithVSTS">Sign In</button>
+                </div>
+                <p class="text-center mt-3 mb-0">Don’t have Team Services accountAccount?</p>
+                <div class="text-center">
+                    <a href="#" class="font-weight-bold text-center text-primary" id="btnCreate">Create Team Services account</a>
+                </div>
+                <div class="demo-generator-feedback mt-auto text-center text-sm-left">
+                    <h6>Feedback&colon;</h6>
+                    <p class="mb-0">To provide feedback, you can email us - <a class="text-primary" href="mailto:devopsdemos@microsoft.com">devopsdemos@microsoft.com</a>. We would appreciate your feedback</p>
+                </div>
+            </div>
+        </main>
+        <footer class="bg-light px-3 py-2">
+            <a href="http://www.ecanarys.com/" target="_blank" style="margin-left:10px;"> Developed by Canarys Automations Pvt. Ltd.</a>
+            <div style="float:right;margin-right:10px;">
+                <a href="https://www.visualstudio.com/support/support-overview-vs" target="_blank" style="">Contact us </a>
+                <a href="https://www.visualstudio.com/news/visual-studio-hiring-overview-vs" " target="_blank" style="padding-left:17px;">Jobs</a>
+                <a href="https://go.microsoft.com/fwlink/?LinkID=264782" target="_blank" style="padding-left:15px;">Privacy</a>
+                <a href="https://go.microsoft.com/fwlink/?LinkID=266231" target="_blank" style="padding-left:15px;">Terms of use</a>
+                <a href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/EN-US.aspx" target="_blank" style="padding-left:15px;">Trademarks </a>
+            </div>
+        </footer>
+    </section>
+</body>
+</html>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#signInWithVSTS').click(function () {
+            window.location.href="../Account/index";
+        });
+    });
+
+	$("input").on("keypress", function (e) {
+		if (e.which === 32 && !this.value.length)
+			e.preventDefault();
+	});
+	$(document).keypress(function (e) {
+		if (e.which == 13) {
+			$('#btnSubmit').click();
+			return false;
+		}
+    });
+	$("#btnSubmit").click(function () {
+		$("#imgLoading").show();
+		$("#btnSubmit").prop("disabled", true);
+		var accountName = $("#accountName").val();
+		var PAT = $("#PAT").val();
+		if (accountName == '') {
+			$("#txtAlert").text("Please enter Account name");
+			$("#txtALertContainer").show();
+			$("#accountName").focus();
+			$("#imgLoading").hide();
+			$("#btnSubmit").prop("disabled", false);
+			return false;
+		}
+		if (PAT == '') {
+			$("#txtAlert").text("Please Enter PAT");
+			$("#txtALertContainer").show();
+			$("#PAT").focus();
+			$("#imgLoading").hide();
+			$("#btnSubmit").prop("disabled", false);
+			return false;
+		}
+		appInsights.trackEvent("Verify button clicked");
+		$("#Verify").submit();
+	});
+
+	$("#getPAT").click(function () {
+		var accountName = $("#accountName").val();
+		if (accountName == '') {
+			$("#txtAlert").text("Please enter Account name");
+			$("#txtALertContainer").show();
+			$("#accountName").focus();
+			return false;
+		}
+		else {
+			var url = "https://" + accountName + ".visualstudio.com/_details/security/tokens";
+			window.open(url, '_blank');
+			return false;
+		}
+	});
+
+	$("#btnCreate").click(function () {
+		var URL = "https://login.microsoftonline.com/common/oauth2/authorize?client_id=499b84ac-1321-427f-aa17-267ca6975798&site_id=501454&response_mode=form_post&response_type=code+id_token&redirect_uri=https%3A%2F%2Fapp.vssps.visualstudio.com%2F_signedin&nonce=0393a80e-180e-412e-8504-49736ead790b&state=realm%3Dapp.vsaex.visualstudio.com%26reply_to%3Dhttps%253A%252F%252Fapp.vsaex.visualstudio.com%252Fprofile%252Faccount%253FacquisitionId%253Df008a85e-fb3c-4181-9b38-52e037824656%2526campaign%253Do~msft~vscom~product-vsts-hero~464%2526account%253Dfirst%2526mkt%253Den-us%26ht%3D3%26nonce%3D0393a80e-180e-412e-8504-49736ead790b&resource=https%3A%2F%2Fmanagement.core.windows.net%2F&cid=0393a80e-180e-412e-8504-49736ead790b&wsucxt=1";
+		window.open(URL, '_blank');
+		return false;
+	});
+
+	$(function () {
+		if ('@Model.Message' != '') {
+			$("#txtAlert").text('@Model.Message');
+			$("#txtALertContainer").show();
+		}
+
+		$(document).on('click', '.radioclass', function () {
+			if ($('#haveAccount').is(':checked')) {
+				$('.radioclass').not(this).prop('checked', false);
+			}
+		});
+	});
+
+
+</script>

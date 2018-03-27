@@ -1,0 +1,1141 @@
+﻿@model VstsDemoBuilder.Models.Project
+@{
+    ViewBag.Title = "VSTS Demogenerator-Create";
+}
+<html>
+<head>
+    <link rel="stylesheet" href="~/Content/ddlStyle.css" />
+    <link rel="stylesheet" href="~/Content/custome-style.css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/tooltip.js"></script>
+    <style type="text/css">
+
+
+        input[type=radio] {
+            border-radius: 50% !important;
+        }
+
+        body * {
+            font-family: "Segoe UI",Helvetica,Arial,sans-serif;
+            font-size: 14px;
+            line-height: 1.42857143;
+            border-radius: 0px !important;
+        }
+
+        input:not([type='button']), select {
+            box-shadow: none !important;
+            border: 1px solid #333 !important;
+        }
+
+        .btnUClass {
+            width: 35px;
+            height: 20px;
+            padding: 0px;
+        }
+
+        .VSTSFont {
+            font-family: "Segoe UI",Helvetica,Arial,sans-serif;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #333;
+        }
+
+        .btnOK {
+            float: right;
+            color: #f5f5f5;
+            background-color: lightgray;
+            background-color: #337ab7;
+            margin-top: 5px;
+            width: 17%;
+            height: 31px;
+            border-radius: 0px;
+        }
+
+        .dropdown-search {
+            border: 1px solid #999;
+            border-radius: 0px;
+            box-shadow: none;
+            padding: 6px;
+        }
+
+        .boldText {
+            font-weight: 700;
+        }
+
+        .extensionErrort {
+            border: 1px solid #333;
+        }
+
+        .submitBtn, .btnUClass, .btnDeselect {
+            background: #0078D7;
+            border-radius: 0px;
+        }
+
+        .btnUpdate {
+            font-size: 14px;
+            margin-top: 20px;
+            margin-right: 0px;
+        }
+
+        .close {
+            font-weight: bold;
+            color: #000;
+            opacity: 1;
+            background: #0078d7 !important;
+            color: #fff;
+            position: absolute;
+            display: block;
+            right: 0px;
+            top: 0px;
+            width: 25px;
+            height: 26px;
+            line-height: 1px;
+            margin: 0px !important;
+        }
+    </style>
+</head>
+<body style="background-color: white; padding-top: 0px;">
+    @Html.HiddenFor(model => model.IsAuthenticated, new { id = "hidIsAuthenticated" })
+    @Html.HiddenFor(model => model.accessToken, new { id = "hiddenAccessToken" })
+    <div class="headerNew col-sm-12" style="padding-left:0px;padding-right:0px;font-size: 125%;">
+        <div style="float:left;color:black;margin-left:10px;">
+            <img style="max-height: 25px;" src="~/Images/vs-logo.png" alt="VSTS Logo" />
+            <div><b>Visual Studio Team Services Demo Generator</b></div>
+        </div>
+        @if (Session["User"] != null)
+        {
+            <div style="float:right;margin-right:10px;"><span class="glyphicon glyphicon-user" style="color: blue;"></span>&nbsp;<span style="color:black;">@Session["User"].ToString()</span>&nbsp;<span><a href="../Account/SignOut" style="text-decoration:underline;">Sign Out</a></span></div>
+        }
+    </div>
+    <div class="container-fluid" id="CreateContainer">
+        <div class="row">
+            <div class="col-md-4 main-left-page2" style="padding-left: 0px; padding-right: 0px;">
+                @* <div class="create-img"></div>     *@
+                <img src="~/Images/MSimgae.png" alt="Create Project" class="img-responsive" style="margin-top:20px;" />
+
+            </div>
+            <div class="col-md-5" style="margin-top:20px;">
+                <div class="form-horizontal">
+                    @if (Model != null)
+                    {
+                        using (@Html.BeginForm("CreateProjectEnvironment", "Environment", FormMethod.Post, new { @id = "createProjectEnvironment", @role = "form" }))
+                        {
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="col-sm-4 control-label">Account Name :</label>
+                                    <div class="col-sm-8">
+                                        @Html.DropDownListFor(model => model.accountName, new SelectList(Model.accountsForDropdown), "--select account--", new { @class = "form-control rmverror", id = "ddlAcccountName" })
+                                        <label style="color:red; font-weight: 400;" id="ddlAcccountName_Error"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="col-sm-4 control-label">New Project Name:</label>
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(model => model.ProjectName, null, new { @class = "form-control rmverror", id = "txtProjectName", placeholder = "Project Name" })
+                                        <label style="color:red; font-weight: 400;" id="txtProjectName_Error"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="col-sm-4 control-label">Select a Template:</label>
+                                    <div class="col-sm-8">
+                                        @Html.DropDownListFor(model => model.SelectedTemplate, new SelectList(Model.Templates), "--select template--", new { @class = "form-control rmverror", id = "ddlTemplates" })
+                                        <label style="color:red; font-weight: 400;" id="ddlTemplates_Error"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12" id="lblextensionError" style="display:none;margin-bottom: 16px;">
+                                    <div style="margin-bottom: 6px;" class="boldText">Verifying if all required extensions are installed and enabled</div>
+                                    <div class="extensionError boldText">
+                                        <p style="display:none;" id="extensionError"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div style="border: solid 1px;padding:8px;">
+                                        <div class="VSTSFont boldText">How would you like the work items to be distributed?</div>
+                                        <span class="VSTSFont VSTSFontRadio" data-toggle='tooltip' title='System will add few dummy users to account, project and will distribute the work items'>@Html.RadioButtonFor(model => model.UserMethod, "Default", new { @id = "Default", @style = "border-radius: 50% !important;" }) <label for="Default">Add Random Users</label> </span>
+                                        <span class="VSTSFont VSTSFontRadio" data-toggle='tooltip' title="The system will randomly pick any 5 users from the account and add them to the project for WI assignment">@Html.RadioButtonFor(model => model.UserMethod, "Random", new { @id = "Random", @style = "border-radius: 50% !important;" })<label for="Random">Any users from the account</label></span>
+                                        <span class="VSTSFont VSTSFontRadio" data-toggle="tooltip" title="You can select the users you want to add to the project for WI distribution">
+                                            @Html.RadioButtonFor(model => model.UserMethod, "Select", new { @id = "Select" })
+                                            <label for="Select">Specific users</label>
+                                            <button class="btn btn-primary btnUClass" id="btnUserShow">...</button>
+                                        </span>
+                                    </div>
+
+                                    @*<button class="btnUsers" id="showUsers">...</button>*@
+                                </div>
+                            </div>
+                            <div id="SoanrQubeDiv" class="projParameters" style="display:none;overflow:auto;">
+                                <label style="font-size:14px;" class="col-sm-4 control-label" data-toggle='tooltip' title='SonarQube URL'>SonarQube URL</label>
+                                <div class="col-sm-8"><input type="text" class="form-control project-parameters" id="txtSonarServerDNSName" placeholder="SonarQube URL"></div>
+                            </div>
+                            <div id="projectParameters" class="projParameters">
+                            </div>
+                            <div class="col-sm-12">
+                                <div style="text-align:right">
+                                    <input type="button" id="btnSubmit" tabindex="4" class="btn btn-primary submitBtn btnUpdate" value="Create Project">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12" style="padding-left:24px;padding-right: 0px;">
+                                <div id="accountLink">
+                                </div>
+                                <div class="meter red" id="dvProgress" style="display:none;">
+                                    <span style="width: 0%;" id="progressBar"></span>
+                                    <div class="VSTSFont"><b>Your project is being created…. Hang on!</b></div>
+                                </div>
+                                <div id="status-messages" style="display:none; padding:5px;border:solid 1px; margin-right:14px;" class="VSTSFont"></div>
+                            </div>
+                            <div class="form-group" style="padding:10px;">
+                                <div class="alert alert-danger" id="txtALertContainer" style="display: none;">
+                                    <label style="font-size: 12px; margin: -4px;" id="txtAlert"></label>
+                                </div>
+                            </div>
+
+                        }
+                    }
+                    else
+                    {
+
+                        <span>no items found</span>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div id="lblDescription" class="form-group" style="margin-top: 20px;margin-right: 5px;display:none;">
+                    <div style="margin-bottom:6px;" class="VSTSFont">About this template</div>
+                    <div class="well descriptionNew VSTSFont" style="background-color: #0078d7;">
+                        <p id="descContainer" style="color:#ffffff; text-align: justify;"></p>
+                    </div>
+                </div>
+                <div class="bg-warning" id="errorNotify" style="display: none;height: auto;">
+                    <b>Notification:</b><br />
+                    <p>
+                        Unexpected errors has been thrown in the project setup, <a onclick="DisplayErrors()" style="cursor: pointer;">click here</a> to see the error details and send to <a href="mailto:@Model.SupportEmail">@Model.SupportEmail</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" id="errorModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b>Errors:</b>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="errorBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*User Modal*@
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" id="userModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:450px;left: 150px; top: 125px;">
+                <div class="modal-header" style="background-color: white;border-bottom:0px;">
+                    <h4 class="modal-title" id="exampleModalLabel" style="text-align:center;height:5px;color:black;">Select Users</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-color:white;">
+                    <div class="form-field" style="display:none;padding-right:60px;" id="ddlUserContainer">
+                        <div class="dropdown-container">
+                            <div class="dropdown-button noselect" style="border:0px;">
+                                <div class="dropdown_label" style="color:black;">Total Users <p style="display:inline;color:black;">[@Model.accountUsersForDdl.Count.ToString()]</p></div>
+                                <div class="dropdown-quantity" style="color:black;">(<span class="quantity" style="color:black;">0</span><p style="display:inline;color:black;"> selected</p>)</div>
+                                <i class="fa fa-filter"></i>
+                            </div>
+                            <div class="dropdown-list" style="border:0px;">
+                                <input type="search" placeholder="Search Users" class="dropdown-search" style="width:63%;padding: 4px;" />@*<span id="clrSearch" title="Clear search box" class="glyphicon glyphicon-remove" style="display:inline;padding-left:8px;cursor:pointer;color:#acacac;"></span>*@
+                                <span id="clrSearch" style="display: inline;color:#0078d7;" class="glyphicon glyphicon-remove-circle searchclear"></span>
+                                <button id="DeselectChk" class="btnDeselect btn" title="Clear-selection">Clear Selection</button>
+                                <ul style="max-height:140px;overflow:auto;padding-left: 0px;margin-top:20px; padding-top:10px;" class="ulCustom" data-columns="2" id="AccountUserList">
+                                    @foreach (var item in Model.accountUsersForDdl)
+                                    {
+                                        <li><input type="checkbox" class="checkbox" value="@item.Value" style="display:inline" />&nbsp;<span style="color:black;">@item.Text</span></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color:white;border-top:0px;">
+                    @*<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Notification for MyShuttle-java template*@
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" id="NotificationModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:600px;left:56px; top:87px;">
+                <div class="modal-header" style="background-color: white;border-bottom:0px;">
+                    <h4 class="modal-title" id="exampleModalLabel" style="text-align:center;height:5px;color:black;">MyShuttle-Java</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-color:white;">
+                    <div style="color:black;" class="VSTSFont">
+                        This template is for the DevOps for Java with VSTS hands-on-lab. The build and release definitions do not work by default unless you  follow the steps in the hands-on-lab <a href="http://almvm.azurewebsites.net/labs/java/" style="color:red;" target="_blank">here.</a>
+                    </div>
+                    <div style="text-align:right;margin-top:20px;">
+                        <button type="button" class="btn btn-primary btnOK" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color:white;border-top:0px;">
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Email model*@
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" id="EmailModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:100%;top:0px;">
+                <div class="modal-header" style="background-color: #337ab7;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-color:lavender;">
+                    <div style="text-align:center;">
+                        <h4>
+                            <b>Error details</b>
+                        </h4>
+                    </div>
+                    <div id="toEmailContainer" style="display:block;margin-right:50px;">
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 text-right control-label">Email:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="toEmail" placeholder="Email address" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 text-right control-label">AccountName:</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="toAccountName" placeholder="AccountName" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 text-right control-label">ErroLog:</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" id="errorMail" style="max-width:382px;height:auto;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="text-align:right;">
+                            <button type="button" class="btn btn-primary" id="sendEmail">Send Email</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color:lavender;">
+                    @*<span id="mailLoader" style="display:none;"><img src="~/Images/loader.gif" style="width:30px;" /></span>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    @*mail success message*@
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" id="infoModel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:100%;top:40px;">
+                <div class="modal-header" style="background-color: #337ab7;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-color:lavender;">
+                    <div style="text-align:center;">
+                        <h4>
+                            <i>success</i>
+                        </h4>
+                    </div>
+                    <div>
+                        <b>Mail has been sent to the team with error details, team will contact you!</b>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color:lavender;">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="feedback">
+        <label style="font-family:'Times New Roman', Times, serif">Feedback:</label><br />
+        To provide feedback, you can email us  - <a href="mailto:devopsdemos@microsoft.com" target="_blank" class="note-link">devopsdemos@microsoft.com</a>. We would appreciate your feedback
+    </footer>
+</body>
+</html>
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/tooltip.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("input[id=Random]").attr('disabled', true);
+        $("input[id=Select]").attr('disabled', true);
+        $("#btnUserShow").attr('disabled', true);
+
+
+
+
+        ga('send', 'event', 'Create page', 'visited');
+
+       // $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+
+        //$('#ddlAcccountName').change(function () {
+        //    var accname = $('#ddlAcccountName option:selected').val();
+        //    var accToken = $('#hiddenAccessToken').val();
+        //    var list = "";
+        //    $.ajax({
+        //        url: "../Environment/GetMembers",
+        //        type: "pOST",
+        //        data: { accountName: accname, AccessToken: accToken},
+        //        success: function (user) {
+        //            list += '<li><input type="checkbox" class="checkbox" value='+user.Value+' style="display:inline" />&nbsp;<span style="color:black;">'+user.Text+'</span></li>';
+        //        }
+        //    });
+        //});
+
+
+    });
+    //DDL search option
+    //$(document).ready(function () {
+    //    $('.selectpicker').selectpicker({
+    //        liveSearch: true,
+    //        showSubtext: true
+    //    });
+    //});
+
+    $(function () {
+
+        $("#Default").prop("checked", "checked");
+
+        $("input").on("keypress", function (e) {
+            if (e.which === 32 && !this.value.length)
+                e.preventDefault();
+        });
+
+
+        /**/
+        /**/
+@*        $("#VerifyContainer").hide();
+        $("#CreateContainer").hide();
+        var IsAuthenticated = $("#hidIsAuthenticated").val();
+        if (IsAuthenticated == "True") {
+            $("#CreateContainer").show();
+        }
+        else {
+            $("#VerifyContainer").show();
+        }*@
+    /**/
+    /**/
+    /**/
+    /**/
+@* var IsAuthenticated = $("#hidIsAuthenticated").val();
+        if (IsAuthenticated == "False") {
+            var url = '@Url.Action("Verify", "Account")';
+            window.location.href = url;
+        }*@
+    /**/
+    /**/
+
+    //DropDown
+
+    $('.dropdown-container')
+        .on('input', '.dropdown-search', function () {
+            var target = $(this);
+            var search = target.val().toLowerCase();
+
+            if (!search) {
+                $('li').show();
+                return false;
+            }
+
+            $('li').each(function () {
+                var text = $(this).text().toLowerCase();
+                var match = text.indexOf(search) > -1;
+                $(this).toggle(match);
+            });
+        })
+        .on('change', '[type="checkbox"]', function () {
+            var numChecked = $('[type="checkbox"]:checked').length;
+            $('.quantity').text(numChecked || '0');
+        });
+
+    //clear searchBox
+    $("#clrSearch").click(function () {
+        $(".dropdown-search").val('');
+        $('li').show();
+    });
+
+    $("#DeselectChk").click(function () {
+        $(".checkbox").each(function () {
+            this.checked = false;
+        });
+        $('.quantity').text('0');
+    });
+
+    //RadioButtons
+    $('input:radio').change(function () {
+        var changedRadio = this;
+
+        $('input:radio').each(function () {
+            this.checked = false;
+        });
+        $("#ddlUserContainer").hide();
+        $("#userModal").modal('hide');
+        //$('.quantity').text('0');
+        changedRadio.checked = true;
+    });
+
+    $(".checkbox").click(function () {
+
+        var checkCount = $(":checkbox:checked").length;
+        if (checkCount > 5) {
+            this.checked = false;
+            alert("Maximum 5 users can be selected");
+        }
+    });
+
+    $("#btnUserShow").click(function () {
+        var radioVal = $("input[type='radio']:checked").val();
+        if (radioVal == "Select") {
+
+            $("#ddlUserContainer").show();
+            $("#userModal").modal('show');
+        }
+
+    });
+
+});
+
+</script>
+<script type="text/javascript">
+
+    var messageList = [];
+    /**/
+    /**/
+    var uniqueId = '@Guid.NewGuid().ToString()';
+    /**/
+    /**/
+    var ErrorData = '';
+    var statusCount = 0;
+    var selectedTemplate = "";
+    var messagesCount = 11;
+    var percentForMessage = Math.floor(100 / messagesCount);
+    var currentPercentage = 0;
+    var projectNameForLink = '';
+    var isExtensionNeeded = false;
+    var isAgreedTerms = false;
+    var microsoft = "";
+    var ThirdParty = "";
+
+    $(document).ready(function (event) {
+        $('.rmverror').click(function () {
+            var errID = this.nextElementSibling.getAttribute('id');
+            $('#' + errID).empty();
+        });
+
+        //Initially disaabling template DD, once select account then enabling template DD
+
+        @*$('#ddlAcccountName').change(function () {
+
+            var accountNameExt = $('#ddlAcccountName option:selected').val();
+            if(accountNameExt == "" || accountNameExt == "--select account--"){
+                var templateNameExt = '@Request.RequestContext.HttpContext.Session["templateName"]';
+                var templateIdExt = '@Request.RequestContext.HttpContext.Session["templateId"]';
+                GetRequiredExtension(templateNameExt);
+            }
+
+            var selectedAccForExtension = $('#ddlAcccountName option:selected').val();
+            if (selectedAccForExtension != "" && selectedAccForExtension != "--select template--") {
+                var templateName = '@Request.RequestContext.HttpContext.Session["templateName"]';
+                var templateId = '@Request.RequestContext.HttpContext.Session["templateId"]';
+                if (templateId == "" && templateName == "") {
+                    $("#ddlTemplates").removeAttr("disabled");
+                }
+            } else {
+                $("#ddlTemplates").attr("disabled", "disabled");
+                $("#ddlAcccountName_Error").text("Please select an account first!");
+                $("#ddlAcccountName_Error").show();
+            }
+        });*@
+
+        $('#ddlAcccountName').change(function () {
+            debugger;
+            var accountNameExt = $('#ddlAcccountName option:selected').val();
+            var selectedTemplateForExtension = $('#ddlTemplates option:selected').val();
+
+            if (accountNameExt == "" || accountNameExt == "--select account--") {
+                return false;
+                var templateNameExt = '@Request.RequestContext.HttpContext.Session["templateName"]';
+                var templateIdExt = '@Request.RequestContext.HttpContext.Session["templateId"]';
+            }
+            else if (selectedTemplateForExtension == "" || selectedTemplateForExtension == "--select template--") {
+                return;
+                var templateName = '@Request.RequestContext.HttpContext.Session["templateName"]';
+                var templateId = '@Request.RequestContext.HttpContext.Session["templateId"]';
+                if (templateId == "" && templateName == "") {
+                    $("#ddlTemplates").removeAttr("disabled");
+                }
+            }
+            else {
+                GetRequiredExtension();
+            }
+
+        });
+
+
+
+
+        $("body").on("click", "#EmailPopup", function () {
+            $("#EmailModal").modal('show');
+        });
+
+        $("#sendEmail").click(function () {
+            var pattern = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+            var emailAddress = $("#toEmail").val();
+            var AccountName = $("#toAccountName").val();
+            var errorLog = $("#errorMail").text();
+            if (emailAddress == '') { alert("Please enter email address"); $("#toEmail").focus(); return false; }
+            else if (!pattern.test(emailAddress)) {
+                alert("Please enter valid email address");
+                $("#toEmail").focus();
+                return false;
+            }
+            if (AccountName == '') { alert("Please enter VSTS account name"); $("#toAccountName").focus(); return false; }
+
+            $("#sendEmail").prop('disabled', true);
+
+            var modelData = { "EmailAddress": emailAddress, "AccountName": AccountName, "ErrorLog": errorLog };
+            $.post("SendEmail", modelData, function (data) {
+                $("#EmailModal").modal('hide');
+                $("#infoModel").modal('show');
+                $("#sendEmail").removeAttr("disabled");
+            });
+        });
+        //checking for extenisoin start
+        var isMicrosoftAgreement = "";
+        var isThirdparty = "";
+        $('#extensionError').click(function () {
+            if (microsoft == "microsoft" && ThirdParty == "thirdparty") {
+                isMicrosoftAgreement = $('input[id=agreeTermsConditions]:checked').val();
+                isThirdparty = $('input[id=ThirdPartyagreeTermsConditions]:checked').val();
+                if (isMicrosoftAgreement == "on" && isThirdparty == "on") {
+                    $("#btnSubmit").prop("disabled", false);
+                    isAgreedTerms = true;
+                }
+                else {
+                    $("#btnSubmit").prop("disabled", true);
+                    isAgreedTerms = false;
+                }
+            }
+            else if (microsoft == "microsoft" && ThirdParty == "") {
+                isMicrosoftAgreement = $('input[id=agreeTermsConditions]:checked').val();
+                isThirdparty = $('input[id=ThirdPartyagreeTermsConditions]:checked').val();
+                if (isMicrosoftAgreement == "on") {
+                    $("#btnSubmit").prop("disabled", false);
+                    isAgreedTerms = true;
+                }
+                else {
+                    $("#btnSubmit").prop("disabled", true);
+                    isAgreedTerms = false;
+
+                }
+            }
+            else if (microsoft == "" && ThirdParty == "thirdparty") {
+                isMicrosoftAgreement = $('input[id=agreeTermsConditions]:checked').val();
+                isThirdparty = $('input[id=ThirdPartyagreeTermsConditions]:checked').val();
+                if (isThirdparty == "on") {
+                    $("#btnSubmit").prop("disabled", false);
+                    isAgreedTerms = true;
+                }
+                else {
+                    $("#btnSubmit").prop("disabled", true);
+                    isAgreedTerms = false;
+                }
+            }
+        });
+
+
+        //$('#agreeTerms').hide();
+        $("#projectParameters").html('');
+        var selectedTemplate = $("#ddlTemplates option:selected").val();
+
+        if (selectedTemplate == "MyShuttle-Java") {
+            $("#NotificationModal").modal('show');
+        }
+        if (selectedTemplate == "SonarQube") {
+            $("#SoanrQubeDiv").show();
+        }
+        else {
+            $("#SoanrQubeDiv").hide();
+        }
+
+        if (selectedTemplate != "" && selectedTemplate != "--select template--") {
+
+            $("#extensionError").html(''); $("#extensionError").hide(); $("#lblextensionError").hide(); $("#btnSubmit").prop("disabled", true);
+            $("#ddlTemplates").attr("disabled", "disabled");
+            var Url = 'GetTemplate/';
+            $.get(Url, { "TemplateName": selectedTemplate }, function (data) {
+
+                if (data != "") {
+                    var ParsedData = JSON.parse(data);
+                    var Description = ParsedData.Description;
+                    var parameters = ParsedData.Parameters;
+
+                    if (Description != "") {
+                        $("#descContainer").html('');
+                        $("#descContainer").html(Description);
+                        $("#lblDescription").show();
+
+                    }
+                    else { $("#lblDescription").hide(); }
+                    if (parameters != undefined) {
+                        if (parameters.length > 0) {
+                            $.each(parameters, function (key, value) {
+                                $('<div class="form-group"><label style="font-size:14px; width:30%;" class="col-sm-3 control-label">' + value.label + ':</label><div style="width:70%;" class="col-sm-4"><input type="text"  class ="form-control project-parameters"  id = "txt' + value.fieldName + '" proj-parameter-name="' + value.fieldName + '"  placeholder = "' + value.fieldName + '"></div></div>').appendTo("#projectParameters");
+                            });
+                            $("#projectParameters").show();
+                        }
+                        else { $("#projectParameters").html(''); }
+                    }
+                }
+                else {
+                    $("#lblDescription").hide();
+                    $("#projectParameters").html('');
+
+                }
+            });
+            if (selectedTemplate != "" && selectedTemplate != "--select template--") {
+
+            	checkForInstalledExtensions(selectedTemplate, function callBack(extensions) {
+
+            		if (extensions.message != "no extensions required" && extensions.message != "" && extensions.message != undefined && extensions.message.indexOf("Error") == -1 && extensions.message != "Template not found") {
+
+            			$("#extensionError").html(extensions.message);
+            			$("#extensionError").show();
+            			$("#lblextensionError").show();
+
+            			if (extensions.status != "true") {
+
+            				$("#btnSubmit").prop("disabled", true);
+                                     isExtensionNeeded = true;
+                                     microsoft = $('#agreeTermsConditions').attr('placeholder');
+                                     if (microsoft != "microsoft") {
+                                         microsoft = "";
+                                     }
+                                     ThirdParty = $('#ThirdPartyagreeTermsConditions').attr('placeholder');
+                                     if (ThirdParty != "thirdparty") {
+                                         ThirdParty = "";
+                                     }
+            				//$('#agreeTerms').show();
+            			} else { $("#btnSubmit").prop("disabled", false); }
+            		}
+            		else { $("#extensionError").html(''); $("#extensionError").hide(); $("#lblextensionError").hide(); /*$('#agreeTerms').hide();*/ $("#btnSubmit").prop("disabled", false); }
+
+            	});
+            }
+        }
+        $("#ddlTemplates").on('change', function () {
+            $("#projectParameters").hide();
+            $("#projectParameters").html('');
+            $("#extensionError").html(''); $("#extensionError").hide(); $("#lblextensionError").hide(); /*$('#agreeTerms').hide();*/ //$("#btnSubmit").prop("disabled", true);
+            var TemplateName = $("#ddlTemplates option:selected").text();
+            if (TemplateName == "MyShuttle-Java") {
+                $("#NotificationModal").modal('show');
+            }
+            if (TemplateName == "SonarQube") {
+                $("#SoanrQubeDiv").show();
+            }
+            else {
+                $("#SoanrQubeDiv").hide();
+            }
+            var Url = 'GetTemplate/';
+            $.get(Url, { "TemplateName": TemplateName }, function (data) {
+
+                if (data != "") {
+                    var ParsedData = JSON.parse(data);
+                    var Description = ParsedData.Description;
+                    var parameters = ParsedData.Parameters;
+
+                    if (Description != "") {
+                        $("#descContainer").html('');
+                        $("#descContainer").html(Description);
+                        $("#lblDescription").show();
+
+                    }
+                    else { $("#lblDescription").hide(); }
+                    if (parameters != undefined) {
+                        if (parameters.length > 0) {
+                            $.each(parameters, function (key, value) {
+                                $('<div class="form-group"><label style="font-size:14px;width:30%;" class="col-sm-3 control-label">' + value.label + ':</label><div style="width:70%;" class="col-sm-4"><input type="text"  class ="form-control project-parameters"  id = "txt' + value.fieldName + '" proj-parameter-name="' + value.fieldName + '"  placeholder = "' + value.fieldName + '"></div></div>').appendTo("#projectParameters");
+
+
+                            });
+                            $("#projectParameters").show();
+                        }
+                        else { $("#projectParameters").html(''); }
+                    }
+                }
+                else {
+                    $("#lblDescription").hide();
+                    $("#projectParameters").html('');
+
+                }
+            });
+            if (TemplateName != "" && TemplateName != "--select template--") {
+
+            	checkForInstalledExtensions(TemplateName, function callBack(extensions) {
+
+            		if (extensions.message != "no extensions required" && extensions.message != "" && extensions.message != undefined && extensions.message.indexOf("Error") == -1 && extensions.message != "Template not found") {
+
+            			$("#extensionError").html(extensions.message);
+            			$("#extensionError").show();
+            			$("#lblextensionError").show();
+
+                                 if (extensions.status != "true") {
+            				$("#btnSubmit").prop("disabled", true);
+            				//$('#agreeTerms').show();
+                                     isExtensionNeeded = true;
+                                     microsoft = $('#agreeTermsConditions').attr('placeholder');
+                                     if (microsoft != "microsoft") {
+                                         microsoft = "";
+                                     }
+                                     ThirdParty = $('#ThirdPartyagreeTermsConditions').attr('placeholder');
+                                     if (ThirdParty != "thirdparty") {
+                                         ThirdParty = "";
+                                     }
+            			} else { $("#btnSubmit").prop("disabled", false); }
+            		}
+            		else { $("#extensionError").html(''); $("#extensionError").hide(); $("#lblextensionError").hide(); /*$('#agreeTerms').hide();*/ $("#btnSubmit").prop("disabled", false); }
+
+            	});
+            }
+        });
+
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                $('#btnSubmit').click();
+                return false;
+            }
+        });
+    });
+    $('#btnSubmit').click(function () {
+        statusCount = 0;
+        $("#txtALertContainer").hide();
+        $('#status-messages').hide();
+        $("#accountLink").hide();
+
+        var projectName = $("#txtProjectName").val();
+        var template = $("#ddlTemplates option:selected").text();
+        var accountName = $('#ddlAcccountName option:selected').val();
+        var token = $('#hiddenAccessToken').val();
+        var regex = /^[A-Za-z0-9 -_]*[A-Za-z0-9][A-Za-z0-9 -_]*$/;
+        if (template == "Octopus") {
+            var octopusURL = $('#txtOctopusURL').val();
+            var octopusAPIkey = $('#txtAPIkey').val();
+            if (octopusURL != "") {
+                var pattern = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]\$&'\(\)\*\+,;=.]+$/
+
+                if (!(pattern.test(octopusURL))) {
+                    $("#txtAlert").text("Please enter a valid URL.");
+                    $("#txtALertContainer").show();
+                    return false;
+                }
+            }
+            else {
+                $("#txtAlert").text("Please enter a valid URL.");
+                $("#txtALertContainer").show();
+                return false;
+            }
+            if (octopusAPIkey == "") {
+                $("#txtAlert").text("Please enter a valid Octopus Key.");
+                $("#txtALertContainer").show();
+                return false;
+            }
+        }
+        if (accountName == "" || accountName == "--select account--") {
+            $("#ddlAcccountName_Error").text("Please choose an account first!");
+            $("#ddlAcccountName_Error").show();
+            $("#ddlAcccountName").focus();
+            return false;
+        }
+        if (projectName == "") {
+            $("#txtProjectName_Error").text("Please provide project name");
+            $("#txtProjectName_Error").show();
+            return false;
+        }
+        if (!(regex.test(projectName))) {
+            $("#txtAlert").text("Special characters are not allowed for project name");
+            $("#txtALertContainer").show();
+            $("#txtProjectName").focus();
+            return false;
+        }
+        if (template == "--select template--") {
+            $("#ddlTemplates_Error").text("Please select a Project template");
+            $("#ddlTemplates_Error").show();
+            return false;
+        }
+        if (template == "SonarQube") {
+            var ServerDNS = $("#txtSonarServerDNSName").val();
+            if (ServerDNS == "") {
+                $("#txtAlert").text("Please enter sonar server DNS name");
+                $("#txtALertContainer").show();
+                return false;
+            }
+            var URLPattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\:[0-9]/;
+            if (!(URLPattern.test(ServerDNS))) {
+                $("#txtAlert").text("Please enter valid Server DNS name");
+                $("#txtALertContainer").show();
+                return false;
+            }
+        }
+
+        //var isCheckedTerms = $('input[id="agreeTermsConditions"]:checked').val();
+        //if (isCheckedTerms == "on") {
+        //	isAgreedTerms = true;
+        //}
+
+        //get userMethod and selected users
+        var SelectedUsers = '';
+        var userMethod = $("input[type='radio']:checked").val();
+        if (userMethod == "Select") {
+            $(".checkbox").each(function () {
+                if (this.checked) {
+
+                    SelectedUsers = SelectedUsers + this.value + ',';
+                }
+            });
+
+            if (SelectedUsers.length == 0) {
+                $("#txtAlert").text("Please select account users");
+                $("#txtALertContainer").show();
+                return false;
+            }
+        }
+
+        $('#status-messages').html('');
+        //$('#status-messages').append('<b id="projCreateMsg">Your project is being created…. Hang on!');
+        $('#status-messages').show();
+
+        var Parameters = {};
+        $.each($('.project-parameters'), function (index, item) {
+            Parameters[$("#" + item['id']).attr('proj-parameter-name')] = item["value"];
+        });
+        selectedTemplate = template;
+        var websiteUrl = window.location.href;
+        var projData = { "ProjectName": projectName, "SelectedTemplate": template, "id": uniqueId, "Parameters": Parameters, "selectedUsers": SelectedUsers, "UserMethod": userMethod, "SonarQubeDNS": ServerDNS, "isExtensionNeeded": isExtensionNeeded, "isAgreeTerms": isAgreedTerms, "websiteUrl": websiteUrl, "accountName": accountName, "accessToken": token };
+        $.post("StartEnvironmentSetupProcess", projData, function (data) {
+
+            if (data != "True") {
+                var queryTemplate = '@Request.QueryString["queryTemplate"]';
+                window.location.href = "~/Account/Verify?template=" + queryTemplate;
+                return;
+            }
+
+            appInsights.trackEvent("Create button clicked");
+            appInsights.trackEvent("Created project using" + selectedTemplate + " template");
+            ga('send', 'event', selectedTemplate, 'selected');
+            appInsights.trackEvent("User method" + userMethod);
+
+            $("#ddlTemplates").attr("disabled", "disabled");
+            $("#ddlAcccountName").attr("disabled", "disabled");
+            $("#txtProjectName").attr("disabled", "disabled");
+
+            $("#btnSubmit").prop("disabled", true);
+            $("input.terms").attr("disabled", true);
+            $("#txtALertContainer").hide();
+            $("#accountLink").html('');
+            $("#errorNotify").hide();
+            projectNameForLink = projectName;
+            ErrorData = '';
+            getStatus();
+        });
+        event.preventDefault;
+    });
+
+    function getStatus() {
+
+        $.ajax({
+            url: 'GetCurrentProgress/' + uniqueId,
+            type: 'GET',
+            success: function (data) {
+                var isMessageShown = true;
+                $('#dvProgress').css('display', 'inline');
+                if (jQuery.inArray(data, messageList) == -1) {
+                    messageList.push(data);
+                    isMessageShown = false;
+                }
+
+            if (data != "100") {
+                if (isMessageShown == false) {
+                    if (messageList.length == 1) {
+                        //$('#status-messages').html('');
+                        $('#progressBar').width(currentPercentage++ + '%');
+                        if (data.length > 0) {
+                            $('#status-messages').append('<br/> <img src="/Images/check-10_new.png" /> ' + data);
+                        }
+                    }
+                    else {
+                        if (data.indexOf("TF200019") == -1) {
+                            $('#progressBar').width(currentPercentage++ + '%');
+
+                        }
+                        $('#status-messages').append('<br/> <img src="/Images/check-10_new.png" /> ' + data);
+                    }
+
+                }
+                else if (currentPercentage <= ((messageList.length + 1) * percentForMessage) && currentPercentage <= 100) {
+                    $('#progressBar').width(currentPercentage++ + '%');
+                }
+                window.setTimeout("getStatus()", 500);
+            }
+            else {
+
+                if (messageList.length != 3) {
+                    var ID = uniqueId + "_Errors";
+                    var url2 = 'GetCurrentProgress/' + ID;
+                    $.get(url2, function (response) {
+                        if (response == "100" || response == "") {
+                            $.get("/Account/GetAccountName/", function (data) {
+                                var accountName = data;
+                                $("#projCreateMsg").hide();
+                                var link = "https://" + accountName + ".visualstudio.com/" + projectNameForLink;
+                                $('<b style="display: block;">Congratulations! Your project is successfully provisioned. Here is the URL to your project</b> <a href="' + link + '" target="_blank" style="font-weight:Bold;font-size:Medium;color:#337ab7">' + link + '</a>').appendTo("#accountLink");
+                                $('#dvProgress').hide();
+                                currentPercentage = 0;
+                                $("#accountLink").show();
+                            });
+                        }
+                        else {
+                    ErrorData = data;
+                            if (ErrorData != '') {
+                                $("#projCreateMsg").hide();
+                                $('<b style="display: block;color:red;">We ran into some issues and we are sorry about that!</b><p style="display: block;color:red;"> The log below will provide you insights into why the provisioning failed. You can email us the log  to <a id="EmailPopup">VSTStoolsSupport@ecanarys.com</a> and we will try to help you.</p>').appendTo("#accountLink");
+                                $('#dvProgress').hide();
+                                currentPercentage = 0;
+                                $("#errorMail").html(ErrorData);
+                                $("#accountLink").show();
+                            }
+                        }
+                    });
+                    messageList = [];
+                }
+                if ('@Request.QueryString["queryTemplate"]' == '') {
+                    $("#ddlTemplates").removeAttr('disabled');
+                    $("#ddlAcccountName").removeAttr("disabled");
+                    $("#txtProjectName").removeAttr("disabled");
+                }
+
+                messageList = [];
+
+                $('#dvProgress').hide();
+                currentPercentage = 0;
+
+                $("#btnSubmit").prop("disabled", false);
+
+                var ID = uniqueId + "_Errors";
+
+                var url2 = 'GetCurrentProgress/' + ID;
+
+                $.get(url2, function (response) {
+
+                    if (response == "100" || response == "") {
+                        $("#errorNotify").hide();
+                    } else {
+                        ErrorData = response;
+                        $("#errorNotify").show();
+                    }
+                });
+                };
+            },
+            error: function (xhr) {
+                getStatus();
+            }
+        });
+    }
+
+    function DisplayErrors() {
+    $("#errorBody").html('<pre>' + ErrorData + '</pre>');
+    $("#errorModal").modal('show');
+    }
+
+
+    function checkForInstalledExtensions(selectedTemplate, callBack) {
+        $("#btnSubmit").prop("disabled", true);
+
+        var Url = '@Url.Action("CheckForInstalledExtensions", "Environment")';
+        var accountNam = $('#ddlAcccountName option:selected').val();
+        var Oauthtoken = $('#hiddenAccessToken').val();
+        var selectedTemplate = $('#ddlTemplates option:selected').val();
+
+        $.get(Url, { "selectedTemplate": selectedTemplate, "token": Oauthtoken, "Account": accountNam}, function (InstalledExtensions) {
+            callBack(InstalledExtensions);
+        });
+    }
+
+    function checkForExtensions(callBack) {
+        $("#btnSubmit").prop("disabled", true);
+
+        var Url = '@Url.Action("CheckForInstalledExtensions", "Environment")';
+        var accountNam = $('#ddlAcccountName option:selected').val();
+        var Oauthtoken = $('#hiddenAccessToken').val();
+        var selectedTemplate = $('#ddlTemplates option:selected').val();
+
+        $.get(Url, { "selectedTemplate": selectedTemplate, "token": Oauthtoken, "Account": accountNam}, function (InstalledExtensions) {
+            callBack(InstalledExtensions);
+        });
+    }
+
+    function GetRequiredExtension() {
+        checkForExtensions(function callBack(extensions) {
+
+            if (extensions.message != "no extensions required" && extensions.message != "" && extensions.message != undefined && extensions.message.indexOf("Error") == -1 && extensions.message != "Template not found") {
+
+                $("#extensionError").html(extensions.message);
+                $("#extensionError").show();
+                $("#lblextensionError").show();
+
+                if (extensions.status != "true") {
+                    $("#btnSubmit").prop("disabled", true);
+                    //$('#agreeTerms').show();
+                    isExtensionNeeded = true;
+                    microsoft = $('#agreeTermsConditions').attr('placeholder');
+                    if (microsoft != "microsoft") {
+                        microsoft = "";
+                    }
+                    ThirdParty = $('#ThirdPartyagreeTermsConditions').attr('placeholder');
+                    if (ThirdParty != "thirdparty") {
+                        ThirdParty = "";
+                    }
+                } else { $("#btnSubmit").prop("disabled", false); }
+            }
+            else { $("#extensionError").html(''); $("#extensionError").hide(); $("#lblextensionError").hide(); /*$('#agreeTerms').hide();*/ $("#btnSubmit").prop("disabled", false); }
+
+        });
+    }
+</script>

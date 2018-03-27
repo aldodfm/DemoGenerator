@@ -1,0 +1,54 @@
+{
+  "count": 4,
+  "value": [
+    {
+      "id": "c666a912-3172-44a1-9730-f3ea671ee7b6",
+      "name": "New",
+      "itemLimit": "0",
+      "isSplit": null,
+      "description": null,
+      "columnType": "incoming",
+      "stateMappings": {
+        "Product Backlog Item": "New",
+        "Bug": "New"
+      }
+    },
+    {
+      "id": "1a1a8afc-51d0-40be-9286-2d39a1d9a55b",
+      "name": "Develop",
+      "itemLimit": "10",
+      "isSplit": "true",
+      "description": "",
+      "columnType": "inProgress",
+      "stateMappings": {
+        "Product Backlog Item": "Approved",
+        "Bug": "Approved"
+      }
+    },
+    {
+      "id": "550a9ba1-a095-4622-af89-e9470da03b4f",
+      "name": "Build and test",
+      "itemLimit": "8",
+      "isSplit": "true",
+      "description": "",
+      "columnType": "inProgress",
+      "stateMappings": {
+        "Product Backlog Item": "Committed",
+        "Bug": "Committed"
+      }
+    },
+    {
+      "id": "d3592dae-8d8c-456b-92f7-73aeb936cc82",
+      "name": "Done",
+      "itemLimit": "0",
+      "isSplit": null,
+      "description": null,
+      "columnType": "outgoing",
+      "stateMappings": {
+        "Product Backlog Item": "Done",
+        "Bug": "Done"
+      }
+    }
+  ],
+  "HttpStatusCode": 0
+}

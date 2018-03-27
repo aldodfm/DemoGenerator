@@ -1,0 +1,23 @@
+{
+  "name": "$name$",
+  
+  "dashboard": {
+    "eTag": "$eTag$"
+  },
+  "position": {
+    "row":"5" ,
+    "column": "3"
+  },
+  "size": {
+    "rowSpan": 2,
+    "columnSpan": 2
+  },
+ "settings":"{\"scope\":\"WorkitemTracking.Queries\",\"groupKey\":\"$QueryId$\",\"title\":\"$name$\",\"chartType\":\"ColumnChart\",\"transformOptions\":{\"filter\":\"$QueryId$\",\"groupBy\":\"System.State\",\"orderBy\":{\"direction\":\"descending\",\"propertyName\":\"value\"},\"measure\":{\"aggregation\":\"count\",\"propertyName\":\"\"},\"historyRange\":null},\"userColors\":[],\"lastArtifactName\":\"$name$\"}",
+  "settingsVersion": {
+    "major": 3,
+    "minor": 0,
+    "patch": 0
+  },
+ 
+  "contributionId": "ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.WitChartWidget"
+}

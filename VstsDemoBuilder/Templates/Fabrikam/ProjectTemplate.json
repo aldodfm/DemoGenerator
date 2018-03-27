@@ -1,0 +1,24 @@
+{
+  "Name": "Template Name",
+  "Description": "Fabrikam Fiber is a fictional company that provides cable television and related services to the United States. They are growing rapidly and have embraced the latest Microsoft technologies in order to scale their customer-facing web site. This will allow the end users to create/manage tickets and track technicians in a self-service way.",
+  "Teams": "Teams.json",
+  "SourceCode": "ImportSourceCode.json",
+  "CreateService": "CreateServiceEndPoint.json",
+  "BoardColumns": "BoardColumns.json",
+  "ProjectSettings": "ProjectSettings.json",
+  "CardStyle": "UpdateCardStyles.json",
+  "CardField": "UpdateCardFields.json",
+  "PBIfromTemplate": "PBIfromTemplate.json",
+  "BugfromTemplate": "BugfromTemplate.json",
+  "EpicfromTemplate": "EpicfromTemplate.json",
+  "TaskfromTemplate": "TaskfromTemplate.json",
+  "TestCasefromTemplate": "TestCasefromTemplate.json",
+  "FeaturefromTemplate": "FeaturefromTemplate.json",
+  "UserStoriesFromTemplate": "",
+  "SetEpic": "EnableEpic.json",
+  "BoardRows": "",
+  "Widget": "WidgetQuery.json",
+  "Chart": "WidgetChart.json",
+  "TeamArea": "TeamArea.json"
+  
+}

@@ -1,0 +1,17 @@
+﻿[
+  {
+    "op": "add",
+    "path": "/fields/System.State",
+    "value": "$State$"
+  },
+  {
+    "op": "add",
+    "path": "/fields/System.AssignedTo",
+    "value": "$Users$"
+  },
+  {
+    "op": "add",
+    "path": "/fields/System.Tags",
+    "value": "$Tags$"
+  }
+]

@@ -1,0 +1,122 @@
+{
+  "name": "FabrikamFiberCI",
+  "type": "build",
+  "quality": "definition",
+  "queue": {
+    "pool": {
+      "id": 2,
+      "name": "Hosted"
+    },
+    "id": 2,
+    "name": "Hosted"
+  },
+  "build": [
+    {
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Build solution Fab.sln",
+      "task": {
+        "id": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+        "versionSpec": "*"
+      },
+      "inputs": {
+        "solution": "FabrikamFiber.CallCenter/FabrikamFiber.CallCenter.sln",
+        "msbuildArgs": "/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true",
+        "platform": "$(platform)",
+        "configuration": "",
+        "clean": "false",
+        "restoreNugetPackages": "true",
+        "vsLocationMethod": "version",
+        "vsVersion": "latest",
+        "vsLocation": "",
+        "msbuildLocationMethod": "version",
+        "msbuildVersion": "latest",
+        "msbuildArchitecture": "x86",
+        "msbuildLocation": "",
+        "logProjectEvents": "true"
+      }
+    },
+    {
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Test Assemblies **\\*test*.dll;-:**\\obj\\**",
+      "task": {
+        "id": "ef087383-ee5e-42c7-9a53-ab56c98420f9",
+        "versionSpec": "*"
+      },
+      "inputs": {
+        "testAssembly": "**\\*test*.dll;-:**\\obj\\**",
+        "testFiltercriteria": "",
+        "runSettingsFile": "",
+        "codeCoverageEnabled": "true",
+        "otherConsoleOptions": "",
+        "vsTestVersion": "14.0",
+        "pathtoCustomTestAdapters": ""
+      }
+    },
+    {
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Copy Publish Artifact: drops",
+      "timeoutInMinutes": 0,
+      "task": {
+        "id": "1d341bb0-2106-458c-8422-d00bcea6512a",
+        "versionSpec": "1.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "CopyRoot": "",
+        "Contents": "**\\*.zip",
+        "ArtifactName": "drops",
+        "ArtifactType": "Container",
+        "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+      }
+    }
+  ],
+  "repository": {
+    "id": "$Fabrikam$",
+    "type": "tfsgit",
+    "name": "Fabrikam",
+    "localPath": "$(sys.sourceFolder)/MyGitProject",
+    "defaultBranch": "refs/heads/master",
+    "url": "",
+    "clean": "false"
+  },
+  "options": [
+    {
+      "enabled": true,
+      "definition": {
+        "id": ""
+      },
+      "inputs": {
+        "parallel": "false",
+        "multipliers": "[\"config\",\"platform\"]"
+      }
+    }
+  ],
+  "variables": {
+    "forceClean": {
+      "value": "false",
+      "allowOverride": true
+    },
+    "config": {
+      "value": "debug, release",
+      "allowOverride": true
+    },
+    "platform": {
+      "value": "any cpu",
+      "allowOverride": true
+    }
+  },
+  "triggers": [
+    {
+      "batchChanges": true,
+      "branchFilters": ["+refs/heads/master"],
+      "triggerType": "continuousIntegration"
+    }
+  ],
+  "comment": "Creating Build Definition for FabrikamFiber application"
+}

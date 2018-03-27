@@ -1,0 +1,7 @@
+{
+  "definition": {
+    "id": $id
+  },
+  "sourceBranch": "refs/heads/master",
+  "parameters": "{\"system.debug\":\"true\",\"BuildConfiguration\":\"debug\",\"BuildPlatform\":\"x64\"}"
+}

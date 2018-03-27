@@ -1,0 +1,11 @@
+{
+  "parameters":
+    {
+      "gitSource":
+        {
+          "url": "https://github.com/nagarajbhairaji/Fabrikam.git"
+        },
+      "serviceEndpointId": "",
+      "deleteServiceEndpointAfterImportIsDone": true
+    }
+}

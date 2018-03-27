@@ -1,0 +1,12 @@
+{
+  "definitionId": $id,
+  "description": "M 98 release",
+  "artifacts": [
+    {
+      "alias": "Fabrikam.CI",
+      "instanceReference": {
+        "id": "90"
+      }
+    }
+  ]
+}

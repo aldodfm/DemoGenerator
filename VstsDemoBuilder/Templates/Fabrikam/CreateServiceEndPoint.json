@@ -1,0 +1,30 @@
+{
+  "name": "Fabrikam",
+  "type": "azurerm",
+  "url": "https://management.azure.com",
+  "subscriptionId": "",
+  "authorization": {
+    "scheme": "ServicePrincipal",
+    "parameters": {
+      "subscriptionId": ""
+    }
+  }
+
+  //{
+  //  "data": {
+  //    "subscriptionId": "",
+  //    "subscriptionName": "",
+  //    "creationMode": "Automatic"
+  //  },
+  //  "name": "$ProjectName$ServiceEndpoint",
+  //  "type": "azurerm",
+  //  "url": "https://management.core.windows.net/",
+  //  "authorization": {
+  //    "parameters": {
+  //      "serviceprincipalid": "",
+  //      "serviceprincipalkey": "",
+  //      "tenantid": ""
+  //    },
+  //    "scheme": "ServicePrincipal"
+  //  }
+  //}

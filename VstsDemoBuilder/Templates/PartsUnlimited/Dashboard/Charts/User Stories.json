@@ -1,0 +1,21 @@
+{
+  "dashboard": {
+    "eTag": "$eTag$"
+  },
+  "name": "User Stories by Assigned To",
+  "position": {
+    "row": "5",
+    "column": "4" 
+  },
+  "size": {
+    "rowSpan": 2,
+    "columnSpan": 2
+  },
+  "settings": "{\"scope\":\"WorkitemTracking.Queries\",\"groupKey\":\"$QueryId$\",\"title\":\"User Stories by Assigned To\",\"chartType\":\"StackAreaChart\",\"transformOptions\":{\"filter\":\"$QueryId$\",\"groupBy\":\"System.AssignedTo\",\"orderBy\":{\"direction\":\"descending\",\"propertyName\":\"value\"},\"measure\":{\"aggregation\":\"count\",\"propertyName\":\"\"},\"historyRange\":\"last7Days\"},\"userColors\":[],\"lastArtifactName\":\"User Stories by Assigned To\"}",
+  "settingsVersion": {
+    "major": 3,
+    "minor": 0,
+    "patch": 0
+  },
+  "contributionId": "ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.WitChartWidget"
+}

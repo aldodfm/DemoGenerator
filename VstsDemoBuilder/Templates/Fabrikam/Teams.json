@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Development Team",
+    "description": "Development Team description"
+  },
+  {
+    "name": "Testing Team",
+    "description": "Testing Team description"
+  },
+  {
+    "name": "DevOps Team",
+    "description": "DevOps Team description"
+  },
+  {
+    "name": "Leadership",
+    "description": "Leadership description"
+  }
+]
+    

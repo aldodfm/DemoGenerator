@@ -1,0 +1,4 @@
+﻿{
+  "name": "All Tasks",
+  "wiql": "SELECT [System.WorkItemType],[System.Title],[System.State] From WorkItems  Where [System.WorkItemType] = 'Task' And [System.TeamProject] = @project And [System.State] <> ''"
+}

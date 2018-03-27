@@ -1,0 +1,12 @@
+Red> #009ccc
+Green>#339933
+
+Purple-->#660066    
+skyBlue-->#0099ff 
+
+
+"chartType\":\"BarChart
+
+"chartType\":\"ColumnChart
+
+"chartType\":\"PieChart

@@ -1,0 +1,73 @@
+﻿{
+  "rules": {
+    "fill": [
+      {
+        "name": "High Priority",
+        "isEnabled": "True",
+        "filter": "[System.Title] contains 'Create a Login Page'",
+        "settings": {
+          "background-color": "#ffd0a0",
+          "title-color": "#000000"
+        }
+      },
+      {
+        "name": "P1-LSI-ActionItems",
+        "isEnabled": "True",
+        "filter": "[System.Tags] contains 'Login Module' and [System.Tags] contains 'DashBoard' and [Microsoft.VSTS.Common.Priority] = '1' and [System.State] = 'Approved'",
+        "settings": {
+          "background-color": "#9c9c9c",
+          "title-color": "#000000",
+          "title-font-weight": "bold"
+        }
+      },
+      {
+        "name": "LSI-ActionItems",
+        "isEnabled": "True",
+        "filter": "[System.State] = 'Approved'",
+        "settings": {
+          "background-color": "#ffdfe0",
+          "title-color": "#000000",
+          "title-font-weight": "bold"
+        }
+      },
+      {
+        "name": "BoardActionItems",
+        "isEnabled": "True",
+        "filter": "[System.State] = 'Committed'",
+        "settings": {
+          "background-color": "#b1c8f7",
+          "title-color": "#000000",
+          "title-font-weight": "bold"
+        }
+      },
+      {
+        "name": "StyleRules",
+        "isEnabled": "True",
+        "filter": "[System.ChangedBy] contains 'Akshay Gopinath' and [System.State] = 'Done'",
+        "settings": {
+          "background-color": "#b8d6fb",
+          "title-color": "#000000",
+          "title-font-weight": "bold"
+        }
+      }
+    ],
+    "tagStyle": [
+      {
+        "name": "LSI",
+        "isEnabled": "True",
+        "settings": {
+          "background-color": "#FBFD52",
+          "color": "#000000"
+        }
+      },
+      {
+        "name": "Blocked",
+        "isEnabled": "True",
+        "settings": {
+          "background-color": "#EC001D",
+          "color": "#FFFFFF"
+        }
+      }
+    ]
+  }
+}

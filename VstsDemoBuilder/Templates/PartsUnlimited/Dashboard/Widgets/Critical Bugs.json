@@ -1,0 +1,21 @@
+{
+  "dashboard": {
+    "eTag": "$eTag$"
+  },
+  "name": "Critical Bugs",
+  "position": {
+    "row": "4",
+    "column": "4"
+  },
+  "size": {
+    "rowSpan": 1,
+    "columnSpan": 1
+  },
+  "settings": "{\"defaultBackgroundColor\":\"#009ccc\",\"queryId\":\"$QueryId$\",\"queryName\":\"Critical Bugs\",\"colorRules\":[{\"isEnabled\":true,\"backgroundColor\":\"#e60017\",\"thresholdCount\":1,\"operator\":\"<=\"}],\"lastArtifactName\":\"Critical Bugs\"}",
+  "settingsVersion": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "contributionId": "ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.QueryScalarWidget"
+}

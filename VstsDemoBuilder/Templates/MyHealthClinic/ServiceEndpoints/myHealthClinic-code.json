@@ -1,0 +1,16 @@
+﻿{
+  "data": {
+
+  },
+  "name": "myHealthClinic-code",
+  "type": "git",
+  "url": "https://vstsdemodata.visualstudio.com/MyHealthClinic/_git/MyHealthClinic2",
+  "authorization": {
+    "scheme": "UsernamePassword",
+    "parameters": {
+      "username": "nagaraj.bhairaji@hotmail.com",
+      "password": "lyps7hw2xsy5qlvaeiqcgrpqdji47qstvuj3i3xv2s6rublqw5qq"
+    }
+  },
+  "isReady": true
+}

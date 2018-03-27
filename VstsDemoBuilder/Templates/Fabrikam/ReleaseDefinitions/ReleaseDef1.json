@@ -1,0 +1,352 @@
+{
+  "name": "$ProjectName$ReleaseDefinition",
+  "variables": {
+    "system.debug": {
+      "value": "false"
+    }
+  },
+  "environments": [
+    {
+      "id": 1,
+      "name": "Dev",
+      "rank": 1,
+      "owner": {
+        "id": "$OwnerId$",
+        "displayName": "$OwnerDisplayName$",
+        "uniqueName": "$OwnerUniqueName$"
+      },
+      "variables": {
+
+      },
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false
+          }
+        ]
+      },
+      "deployStep": {
+        "tasks": [
+          {
+            "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+            "version": "*",
+            "name": "Deploy AzureRM Web App",
+            "enabled": true,
+            "alwaysRun": false,
+            "continueOnError": false,
+            "timeoutInMinutes": 0,
+            "definitionType": "task",
+            "inputs": {
+              "ConnectedServiceName": "$Fabrikam$",
+              "WebAppName": "FabrikmasampleDev",
+              "DeployToSlotFlag": "false",
+              "ResourceGroupName": "",
+              "SlotName": "",
+              "Package": "$(System.DefaultWorkingDirectory)/FabrikamFiberCI/drops/FabrikamFiber.Web/obj/Debug/Package/FabrikamFiber.Web.zip",
+              "SetParametersFile": "",
+              "UseWebDeploy": "true",
+              "RemoveAdditionalFilesFlag": "true",
+              "ExcludeFilesFromAppDataFlag": "false",
+              "TakeAppOfflineFlag": "false",
+              "VirtualApplication": "",
+              "AdditionalArguments": "",
+              "WebAppUri": ""
+            }
+          },
+          {
+            "taskId": "ce85a08b-a538-4d2b-8589-1d37a9ab970f",
+            "version": "1.*",
+            "name": "Deploy to Azure SQL : DacpacTask",
+            "enabled": true,
+            "alwaysRun": false,
+            "continueOnError": false,
+            "timeoutInMinutes": 0,
+            "definitionType": "task",
+            "inputs": {
+              "ConnectedServiceNameSelector": "ConnectedServiceNameARM",
+              "ConnectedServiceName": "",
+              "ConnectedServiceNameARM": "$Fabrikam$",
+              "ServerName": "Demo",
+              "DatabaseName": "Fabrikam",
+              "SqlUsername": "",
+              "SqlPassword": "",
+              "TaskNameSelector": "DacpacTask",
+              "DacpacFile": "$(System.DefaultWorkingDirectory)/FabrikamFiberCI/drops/FabrikamFiber.Web/obj/Debug/Package/FabrikamFiber.Web.zip",
+              "SqlFile": "",
+              "SqlInline": "",
+              "PublishProfile": "",
+              "AdditionalArguments": "",
+              "SqlAdditionalArguments": "",
+              "InlineAdditionalArguments": "",
+              "IpDetectionMethod": "AutoDetect",
+              "StartIpAddress": "",
+              "EndIpAddress": "",
+              "DeleteFirewallRule": "true"
+            }
+          }
+        ]
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false
+          }
+        ]
+      },
+      "queueId": "$Hosted$",
+      "conditions": [
+        {
+          "name": "ReleaseStarted",
+          "conditionType": "event",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "QA",
+      "rank": 2,
+      "owner": {
+        "id": "$OwnerId$",
+        "displayName": "$OwnerDisplayName$",
+        "uniqueName": "$OwnerUniqueName$"
+      },
+      "variables": {
+
+      },
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false
+          }
+        ]
+      },
+      "deployStep": {
+        "tasks": [
+          {
+            "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+            "version": "*",
+            "name": "Deploy AzureRM Web App",
+            "enabled": true,
+            "alwaysRun": false,
+            "continueOnError": false,
+            "timeoutInMinutes": 0,
+            "definitionType": "task",
+            "inputs": {
+              "ConnectedServiceName": "$Fabrikam$",
+              "WebAppName": "fabrikamasampleqasite",
+              "DeployToSlotFlag": "false",
+              "ResourceGroupName": "",
+              "SlotName": "",
+              "Package": "$(System.DefaultWorkingDirectory)/FabrikamFiberCI/drops/FabrikamFiber.Web/obj/Debug/Package/FabrikamFiber.Web.zip",
+              "SetParametersFile": "",
+              "UseWebDeploy": "true",
+              "RemoveAdditionalFilesFlag": "true",
+              "ExcludeFilesFromAppDataFlag": "false",
+              "TakeAppOfflineFlag": "false",
+              "VirtualApplication": "",
+              "AdditionalArguments": "",
+              "WebAppUri": ""
+            }
+          }
+        ]
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": false,
+            "isNotificationOn": true,
+            "approver": {
+              "id": "$OwnerId$",
+              "displayName": "$OwnerDisplayName$",
+              "uniqueName": "$OwnerUniqueName$"
+            }
+          }
+        ]
+      },
+      "queueId": "$Hosted$",
+      "conditions": [
+        {
+          "name": "Dev",
+          "conditionType": 2,
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Pre-Production",
+      "rank": 3,
+      "owner": {
+        "id": "$OwnerId$",
+        "displayName": "$OwnerDisplayName$",
+        "uniqueName": "$OwnerUniqueName$"
+      },
+      "variables": {
+
+      },
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": false,
+            "isNotificationOn": true,
+            "approver": {
+              "id": "$OwnerId$",
+              "displayName": "$OwnerDisplayName$",
+              "uniqueName": "$OwnerUniqueName$"
+            }
+          }
+        ]
+      },
+      "deployStep": {
+        "tasks": [
+          {
+            "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+            "version": "*",
+            "name": "Deploy AzureRM Web App",
+            "enabled": true,
+            "alwaysRun": false,
+            "continueOnError": false,
+            "timeoutInMinutes": 0,
+            "definitionType": "task",
+            "inputs": {
+              "ConnectedServiceName": "$Fabrikam$",
+              "WebAppName": "fabrikamasamplePre",
+              "DeployToSlotFlag": "false",
+              "ResourceGroupName": "",
+              "SlotName": "",
+              "Package": "$(System.DefaultWorkingDirectory)/FabrikamFiberCI/drops/FabrikamFiber.Web/obj/Debug/Package/FabrikamFiber.Web.zip",
+              "SetParametersFile": "",
+              "UseWebDeploy": "true",
+              "RemoveAdditionalFilesFlag": "true",
+              "ExcludeFilesFromAppDataFlag": "false",
+              "TakeAppOfflineFlag": "false",
+              "VirtualApplication": "",
+              "AdditionalArguments": "",
+              "WebAppUri": ""
+            }
+          }
+        ]
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false
+          }
+        ]
+      },
+      "queueId": "$Hosted$",
+      "conditions": [
+        {
+          "name": "QA",
+          "conditionType": 2,
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Production",
+      "rank": 4,
+      "owner": {
+        "id": "$OwnerId$",
+        "displayName": "$OwnerDisplayName$",
+        "uniqueName": "$OwnerUniqueName$"
+      },
+      "variables": {
+
+      },
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false
+          }
+        ]
+      },
+      "deployStep": {
+        "tasks": [
+          {
+            "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+            "version": "*",
+            "name": "Deploy AzureRM Web App",
+            "enabled": true,
+            "alwaysRun": false,
+            "continueOnError": false,
+            "timeoutInMinutes": 0,
+            "definitionType": "task",
+            "inputs": {
+              "ConnectedServiceName": "$Fabrikam$",
+              "WebAppName": "fabrikamasampleProd",
+              "DeployToSlotFlag": "false",
+              "ResourceGroupName": "",
+              "SlotName": "",
+              "Package": "$(System.DefaultWorkingDirectory)/FabrikamFiberCI/drops/FabrikamFiber.Web/obj/Debug/Package/FabrikamFiber.Web.zip",
+              "SetParametersFile": "",
+              "UseWebDeploy": "true",
+              "RemoveAdditionalFilesFlag": "true",
+              "ExcludeFilesFromAppDataFlag": "false",
+              "TakeAppOfflineFlag": "false",
+              "VirtualApplication": "",
+              "AdditionalArguments": "",
+              "WebAppUri": ""
+            }
+          }
+        ]
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false
+          }
+        ]
+      },
+      "queueId": "$Hosted$",
+      "conditions": [
+        {
+          "name": "Pre-Production",
+          "conditionType": 2,
+          "value": "4"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "sourceId": "$ProjectId$:$FabrikamFiberCI-id$",
+      "type": "Build",
+      "alias": "FabrikamFiberCI",
+      "definitionReference": {
+        "definition": {
+          "id": "$FabrikamFiberCI-id$",
+          "name": "$BuildDefinitionName$"
+        },
+        "project": {
+          "id": "$ProjectId$",
+          "name": "$ProjectName$"
+        }
+      },
+      "isPrimary": true
+    }
+  ],
+  "triggers": [
+    {
+      "artifactAlias": "FabrikamFiberCI",
+      "triggerType": "artifactSource"
+    }
+  ],
+  "releaseNameFormat": "Release-$(rev:r)"
+}

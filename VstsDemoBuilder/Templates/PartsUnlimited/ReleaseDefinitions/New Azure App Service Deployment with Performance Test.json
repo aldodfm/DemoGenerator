@@ -1,0 +1,172 @@
+{
+	"source": 2,
+	"revision": 1,
+	"name": "New Azure App Service Deployment with Performance Test 28-Jan",	
+	"lastRelease": null,
+	"path": "\\",
+	"variables": {},
+	"variableGroups": [],
+  "environments": [
+    {
+      "name": "Environment 1",
+      "rank": 1,
+      "variables": {
+        "AdministratorLogin": {
+          "value": ""
+        },
+        "AdministratorLoginPassword": {
+          "value": null,
+          "isSecret": true
+        },
+        "DatabaseName": {
+          "value": ""
+        },
+        "ServerName": {
+          "value": ""
+        },
+        "ConnectionStringName": {
+          "value": ""
+        },
+        "ReleasePlatform": {
+          "value": "Any CPU"
+        },
+        "ReleaseConfiguration": {
+          "value": "Release"
+        }
+      },
+      "preDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false
+          }
+        ]
+      },
+      "deployStep": {
+        "tasks": [
+          {
+            "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+            "version": "2.*",
+            "name": "Deploy Azure App Service",
+            "enabled": true,
+            "alwaysRun": false,
+            "continueOnError": false,
+            "timeoutInMinutes": 0,
+            "definitionType": null,
+            "inputs": {
+              "ConnectedServiceName": "$EndpointId$",
+              "WebAppName": "PU-DevTest",
+              "DeployToSlotFlag": "false",
+              "ResourceGroupName": "",
+              "SlotName": "",
+              "VirtualApplication": "",
+              "Package": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
+              "WebAppUri": "",
+              "UseWebDeploy": "true",
+              "SetParametersFile": "",
+              "RemoveAdditionalFilesFlag": "false",
+              "ExcludeFilesFromAppDataFlag": "false",
+              "AdditionalArguments": "",
+              "TakeAppOfflineFlag": "false"
+            }
+          },
+          {
+            "taskId": "9648625c-1523-4eb5-b015-dfe7c685840c",
+            "version": "1.*",
+            "name": "Quick Web Performance Test",
+            "enabled": false,
+            "alwaysRun": false,
+            "continueOnError": false,
+            "timeoutInMinutes": 0,
+            "definitionType": null,
+            "inputs": {
+              "connectedServiceName": "$EndpointId$",
+              "websiteUrl": "",
+              "testName": "LoadTest",
+              "vuLoad": "25",
+              "runDuration": "60",
+              "geoLocation": "Default",
+              "machineType": "0",
+              "avgResponseTimeThreshold": "0"
+            }
+          }
+        ]
+      },
+      "postDeployApprovals": {
+        "approvals": [
+          {
+            "rank": 1,
+            "isAutomated": true,
+            "isNotificationOn": false
+          }
+        ]
+      },
+      "deployPhases": [
+        {
+          "deploymentInput": {
+            "parallelExecution": {
+              "parallelExecutionType": "none"
+            },
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "queueId": "$Hosted$",
+            "demands": [],
+            "enableAccessToken": false
+          },
+          "rank": 1,
+          "phaseType": 1,
+          "name": "Run on agent",
+          "workflowTasks": [
+          ]
+        }
+      ],
+      "environmentOptions": {
+        "emailNotificationType": "OnlyOnFailure",
+        "emailRecipients": "release.environment.owner;release.creator",
+        "skipArtifactsDownload": false,
+        "timeoutInMinutes": 0,
+        "enableAccessToken": false
+      },
+      "demands": [],
+      "queueId": "$Hosted$",
+      "conditions": [
+        {
+          "name": "ReleaseStarted",
+          "conditionType": 1,
+          "value": ""
+        }
+      ],
+      "executionPolicy": {
+        "concurrencyCount": 0,
+        "queueDepthCount": 0
+      },
+      "schedules": [],
+      "retentionPolicy": {
+        "daysToKeep": 30,
+        "releasesToKeep": 3,
+        "retainBuild": true
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "sourceId": "$ProjectId$:$PartsUnlimited-new-id$",
+      "type": "Build",
+      "alias": "PartsUnlimited-new",
+      "definitionReference": {
+        "definition": {
+          "id": "$PartsUnlimited-new-id$",
+          "name": "PartsUnlimited-new"
+        },
+        "project": {
+          "id": "$ProjectId$",
+          "name": "$ProjectName$"
+        }
+      },
+      "isPrimary": true
+    }
+  ],
+	"triggers": [],
+	"releaseNameFormat": "Release-$(rev:r)"
+}
